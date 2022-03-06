@@ -2,22 +2,22 @@ import subprocess
 import math
 
 def run_cmd(args_list):
-        """
-        run linux commands
-        """
-        proc = subprocess.Popen(args_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        s_output, s_err = proc.communicate()
-        s_return =  proc.returncode
-        return s_return, s_output, s_err
+    """
+    run linux commands
+    """
+    proc = subprocess.Popen(args_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    s_output, s_err = proc.communicate()
+    s_return =  proc.returncode
+    return s_return, s_output, s_err
 
 def convert_size(size):
-   if (float(size) == 0):
-       return '0B'
-   size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
-   i = int(math.floor(math.log(float(size),1024)))
-   p = math.pow(1024,i)
-   s = round(float(size)/p,2)
-   return '%s %s' % (s,size_name[i])
+    if (float(size) == 0):
+        return '0B'
+    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+    i = int(math.floor(math.log(float(size),1024)))
+    p = math.pow(1024,i)
+    s = round(float(size)/p,2)
+    return '%s %s' % (s,size_name[i])
 
 def print_size(path):
 
@@ -49,7 +49,7 @@ def print_size(path):
                     i['directory_size'].rjust(15) + ' | ' + str(i['file_size']).rjust(15) + ' | ')
 
 def main():
-    (ret, out, err) = run_cmd(['hdfs', 'dfs', '-count', '-q', '/projects/'])
+    (ret, out, err) = run_cmd(['hdfs', 'dfs', '-count', '-q', '/projects/evaluate'])
     columns = ' '.join(out.decode().split()).split(' ')
     if columns[0]:
         print('PATH                   : ' + columns[7])
@@ -61,8 +61,9 @@ def main():
         print('FILE_COUNT             : ' + columns[5])
         print('CONTENT_SIZE           : ' + convert_size(columns[6]))
 
-    print_size(path)
+    print_size('/projects/evaluate/*')
+    print_size('/projects/evaluate/data/*')
+    print_size('/projects/evaluate/data/dhr/*')
 
 if __name__ == "__main__":
     main()
-
