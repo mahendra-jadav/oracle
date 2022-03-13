@@ -42,7 +42,8 @@ with tab_tables as
 						        and b.constraint_schema = c.constraint_schema
 					           )
                              , 'r_table_name', (select tc.table_name
-                                                  from INFORMATION_SCHEMA.referential_constraints b inner join INFORMATION_SCHEMA.table_constraints tc 
+                                                  from INFORMATION_SCHEMA.referential_constraints b 
+						 inner join INFORMATION_SCHEMA.table_constraints tc 
 						    on ( tc.constraint_name = b.unique_constraint_name and
 						         tc.constraint_schema = b.unique_constraint_schema
 						       )
@@ -50,9 +51,12 @@ with tab_tables as
 					           and b.constraint_schema = c.constraint_schema
 					       )
                              , 'r_column_name', (select ku.column_name
-                                                   from INFORMATION_SCHEMA.referential_constraints b inner join INFORMATION_SCHEMA.table_constraints tc 
+                                                   from INFORMATION_SCHEMA.referential_constraints b 
+						  inner join INFORMATION_SCHEMA.table_constraints tc 
 						     on ( tc.constraint_name = b.unique_constraint_name and
-							  tc.constraint_schema = b.unique_constraint_schema) inner join INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku
+							  tc.constraint_schema = b.unique_constraint_schema
+							) 
+						  inner join INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku
 						     on ( tc.table_schema     = ku.table_schema         and
                                                           tc.table_name       = ku.table_name           and
                                                           tc.constraint_name  = ku.constraint_name      and
@@ -62,11 +66,12 @@ with tab_tables as
 					            and b.constraint_schema = c.constraint_schema
 				                )
                           )) as constraints
-    from INFORMATION_SCHEMA.TABLE_CONSTRAINTS c inner join INFORMATION_SCHEMA.KEY_COLUMN_USAGE cc
+    from INFORMATION_SCHEMA.TABLE_CONSTRAINTS c 
+   inner join INFORMATION_SCHEMA.KEY_COLUMN_USAGE cc
       on ( c.table_schema = cc.table_schema and
            c.table_name = cc.table_name     and
            c.constraint_name = cc.constraint_name
-	     )
+	 )
    where c.table_name='postgres_example2'
      and c.table_schema='public'
      and c.constraint_type in ('PRIMARY KEY','FOREIGN KEY','UNIQUE') 
