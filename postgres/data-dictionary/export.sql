@@ -34,32 +34,33 @@ with tab_tables as
                              , 'r_owner', ( select b.unique_constraint_schema
                                               from INFORMATION_SCHEMA.referential_constraints b
                                              where b.constraint_name = c.constraint_name
-									   	       and b.constraint_schema = c.constraint_schema
-									      )
+			                       and b.constraint_schema = c.constraint_schema
+			                  )
                              , 'r_constraint_name',( select b.unique_constraint_name
                                                        from INFORMATION_SCHEMA.referential_constraints b
                                                       where b.constraint_name = c.constraint_name
-										                and b.constraint_schema = c.constraint_schema
-									               )
+						        and b.constraint_schema = c.constraint_schema
+					           )
                              , 'r_table_name', (select tc.table_name
                                                   from INFORMATION_SCHEMA.referential_constraints b inner join INFORMATION_SCHEMA.table_constraints tc 
-											        on (tc.constraint_name = b.unique_constraint_name and
-													    tc.constraint_schema = b.unique_constraint_schema)
+						    on ( tc.constraint_name = b.unique_constraint_name and
+						         tc.constraint_schema = b.unique_constraint_schema
+						       )
                                                  where b.constraint_name = c.constraint_name
-										           and b.constraint_schema = c.constraint_schema
-											   )
+					           and b.constraint_schema = c.constraint_schema
+					       )
                              , 'r_column_name', (select ku.column_name
                                                    from INFORMATION_SCHEMA.referential_constraints b inner join INFORMATION_SCHEMA.table_constraints tc 
-								   			         on (tc.constraint_name = b.unique_constraint_name and
-												 	     tc.constraint_schema = b.unique_constraint_schema) inner join INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku
-											         on (tc.table_schema     = ku.table_schema         and
-                                                         tc.table_name       = ku.table_name           and
-                                                         tc.constraint_name  = ku.constraint_name      and
-													     cc.position_in_unique_constraint = ku.ordinal_position
-	                                                    )
+						     on ( tc.constraint_name = b.unique_constraint_name and
+							  tc.constraint_schema = b.unique_constraint_schema) inner join INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku
+						     on ( tc.table_schema     = ku.table_schema         and
+                                                          tc.table_name       = ku.table_name           and
+                                                          tc.constraint_name  = ku.constraint_name      and
+							  cc.position_in_unique_constraint = ku.ordinal_position
+	                                                )
                                                   where b.constraint_name = c.constraint_name
-										            and b.constraint_schema = c.constraint_schema
-											    )
+					            and b.constraint_schema = c.constraint_schema
+				                )
                           )) as constraints
     from INFORMATION_SCHEMA.TABLE_CONSTRAINTS c inner join INFORMATION_SCHEMA.KEY_COLUMN_USAGE cc
       on ( c.table_schema = cc.table_schema and
